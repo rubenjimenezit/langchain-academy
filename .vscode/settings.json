@@ -1,0 +1,4 @@
+{
+    "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
+    "python.defaultInterpreterPath": "/usr/bin/python3"
+}
