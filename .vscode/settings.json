@@ -1,4 +1,5 @@
 {
     "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
-    "python.defaultInterpreterPath": "/usr/bin/python3"
+    "python.defaultInterpreterPath": "/usr/bin/python3",
+    "python.terminal.useEnvFile": true
 }
