@@ -71,10 +71,10 @@ builder.add_conditional_edges(
     tools_condition,
 )
 builder.add_edge("tools", "assistant")
-graph = builder.compile()
+react_graph = builder.compile()
 
 # Show
-display(Image(graph.get_graph(xray=True).draw_mermaid_png()))
+display(Image(react_graph.get_graph(xray=True).draw_mermaid_png()))
 
 
 
@@ -82,7 +82,7 @@ display(Image(graph.get_graph(xray=True).draw_mermaid_png()))
 # Render the graph as a PNG and open it in Windows (WSL environment)
 # import subprocess
 
-# png_data = graph.get_graph().draw_mermaid_png()
+# png_data = react_graph.get_graph().draw_mermaid_png()
 # with open("/tmp/graph.png", "wb") as f:
 #     f.write(png_data)
 # subprocess.run(["explorer.exe", r"\\wsl$\Ubuntu\tmp\graph.png"])
@@ -93,7 +93,7 @@ display(Image(graph.get_graph(xray=True).draw_mermaid_png()))
 
 
 messages = [HumanMessage(content="Add 3 and 4. Multiply the output by 2. Divide the output by 5")]
-messages = graph.invoke({"messages": messages})
+messages = react_graph.invoke({"messages": messages})
 
 for m in messages['messages']:
     m.pretty_print()

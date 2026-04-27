@@ -1,5 +1,7 @@
 {
     "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
     "python.defaultInterpreterPath": "/usr/bin/python3",
-    "python.terminal.useEnvFile": true
+    "python.terminal.useEnvFile": true,
+    "snyk.advanced.organization": "68f288b5-fc6d-402c-85ed-3f6684f7c98d",
+    "snyk.advanced.autoSelectOrganization": true
 }

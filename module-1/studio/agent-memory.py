@@ -28,13 +28,14 @@ def divide(a: int, b: int) -> float:
     """
     return a / b
 
+
+
+
 tools = [add, multiply, divide]
 llm = ChatAnthropic(model="claude-haiku-4-5")  # type: ignore
+llm_with_tools = llm.bind_tools(tools)
 
-# For this ipynb we set parallel tool calling to false as math generally is done sequentially, and this time we have 3 tools that can do math
-# the OpenAI model specifically defaults to parallel tool calling for efficiency, see https://python.langchain.com/docs/how_to/tool_calling_parallel/
-# play around with it and see how the model behaves with math equations!
-llm_with_tools = llm.bind_tools(tools, parallel_tool_calls=False)
+
 
 
 from langgraph.graph import MessagesState
@@ -51,8 +52,7 @@ def assistant(state: MessagesState):
 
 
 from langgraph.graph import START, StateGraph
-from langgraph.prebuilt import tools_condition
-from langgraph.prebuilt import ToolNode
+from langgraph.prebuilt import tools_condition, ToolNode
 from IPython.display import Image, display
 
 # Graph
@@ -71,28 +71,51 @@ builder.add_conditional_edges(
     tools_condition,
 )
 builder.add_edge("tools", "assistant")
-graph = builder.compile()
+# graph = builder.compile()
 
 # Show
-display(Image(graph.get_graph(xray=True).draw_mermaid_png()))
+# display(Image(graph.get_graph(xray=True).draw_mermaid_png()))
+
+
+
+# messages = [HumanMessage(content="Add 3 and 4.")]
+# messages = graph.invoke({"messages": messages})
+# for m in messages['messages']:
+#     m.pretty_print()
+
+
+
+# messages = [HumanMessage(content="Multiply that by 2.")]
+# messages = graph.invoke({"messages": messages})
+# for m in messages['messages']:
+#     m.pretty_print()
 
 
 
 
-# Render the graph as a PNG and open it in Windows (WSL environment)
-# import subprocess
-
-# png_data = graph.get_graph().draw_mermaid_png()
-# with open("/tmp/graph.png", "wb") as f:
-#     f.write(png_data)
-# subprocess.run(["explorer.exe", r"\\wsl$\Ubuntu\tmp\graph.png"])
 
 
 
+from langgraph.checkpoint.memory import MemorySaver
+memory = MemorySaver()
+# graph = builder.compile(checkpointer=memory)
+graph = builder.compile()
 
 
+# Specify a thread
+# config = {"configurable": {"thread_id": "1"}}
 
-messages = [HumanMessage(content="Add 3 and 4. Multiply the output by 2. Divide the output by 5")]
+# Specify an input
+messages = [HumanMessage(content="Add 3 and 4.")]
+
+# Run
+# messages = graph.invoke({"messages": messages},config)
+messages = graph.invoke({"messages": messages})
+for m in messages['messages']:
+    m.pretty_print()
+
+messages = [HumanMessage(content="Multiply that by 2.")]
+# messages = graph.invoke({"messages": messages}, config)
 messages = graph.invoke({"messages": messages})
 
 for m in messages['messages']:
